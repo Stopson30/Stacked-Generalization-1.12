@@ -5,19 +5,68 @@ def euclidean_distance(row1, row2):
     for i in range(len(row1)-1):
         distance += (row1[i] - row2[i])**2
         return sqrt(distance)
+def get_neighbors(train, test_row, num_neighbors):
+    distances = list()
+    for train_row in train:
+        dist = euclidean_distance(test_row, train_row)
+        distances.append((train_row, dist))
+    distances.sort(key=lambda tup: tup[1])
+    neighbors = list()
+    for i in range(num_neighbors):
+        neighbors.append(distances[i] [0])
+        return neighbors
     
-    #calculate Euclidean distance between 2 vectors
-    def euclidean_distance(row1, row2):
-    distance = 0.0 
-    for i in range(len(row1)-1):
-        distance += (row1[i] - row2[i])**2
-        return sqrt(distance)
+    #locate neighbors for a new row
     
-    #calculate Euclidean distance between 2 vectors
-    def euclidean_distance(row1, row2):
-    distance = 0.0 
-    for i in range(len(row1)-1):
-        distance += (row1[i] - row2[i])**2
-        return sqrt(distance)
+    def knn_predict(model, test_row, num_neighbors=2):
+    neighbors = get_neighbors(model, test_row, num_neighbors)
+    output_values = [row[-1] for row in neighbors]
+    prediction = max(set(ouput_values), key=output_values.count)
+    return prediction
+
+#make a prediction with knn
+
+def perceptron_predict(model, row):
+    activation = model[0]
+    for i in range(len(row)-1):
+        activation += model[i +1] * row[i]
+    return 1.0 if activation >= 0.0 else 0.0
+
+#make a prediction with weights
+
+def perceptron_model(train, l_rate=0.01, n_epoch=5000):
+    weights = [0.0 for i in range(len(train[0]))]
+    for epoch in range(n_epoch):
+        for rown in train:
+            prediction = perceptron_predict(weights, row)
+            error = row[-1] - prediction
+            weights[0] = weights[0] + l_rate * error
+            for i in range(len(row)-1):
+                weights[i + 1] = weights[i + 1] + l_rate * error * row[i]
+    return weights
+
+#estimate perceptron weights using SGD
+
+def logistic_regression_predict(model, row):
+    yhat = model[0]
+    for i in range(len(row)-1):
+        yhat += model[i + 1] * row[i]
+    return 1.0 / (1.0 + exp(-yhat))
+
+#make a prediction with coefficients
+
+def logistic_regression_model(train, l_rate=0.01, n_epoch=5000):
+    coef = [0.0 for i in range(len(train[0]))]
+    for epoch in range(n_epoch):
+        for row in train:
+            yhat = logistic_regression_predict(coef, row)
+            error = row[-1] - yhat
+            coef[0] = coef[0] + l_rate * error * yhat * (1.0 - yhat)
+            for i in range(len(row)-1):
+                coef[i + 1] = coef[i + 1] + l_rate * error * yhat * (1.0 - yhat) * row[i]
+    return coef
+
+#estimate logistic regression coefficients using SGD    
+
+
     
-    #calculate Euclidean distance between 2 vectors
